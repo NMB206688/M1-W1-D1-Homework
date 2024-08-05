@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Validator</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Vue.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <!-- Bootstrap JS CDN -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <style>
+        .has_required {
+            text-decoration: line-through;
+            color: #689868;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-6 my-5">
+                <password-helper inline-template>
+                    <div>
+                        <div class="form-group mb-3">
+                            <label for="password">Enter Password:</label>
+                            <input type="password" id="password" class="form-control" v-model="password" placeholder="Password">
+                            <small id="passwordHelp" class="form-text text-muted">Password should contain:
+                                <span :class="has_minimum_length ? 'has_required' : ''">At least 8 characters</span>,
+                                <span :class="has_upperCase ? 'has_required' : ''">At least one uppercase letter</span>,
+                                <span :class="has_lowerCase ? 'has_required' : ''">At least one lowercase letter</span>,
+                                <span :class="has_number ? 'has_required' : ''">At least one number</span>, and
+                                <span :class="has_special ? 'has_required' : ''">At least one special character</span>
+                            </small>
+                        </div>
+                    </div>
+                </password-helper>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Register a global component called password-helper
+    Vue.component('password-helper', {
+        data() {
+            return {
+                password: '',
+                has_minimum_length: false,
+                has_number: false,
+                has_lowerCase: false,
+                has_upperCase: false,
+                has_special: false,
+            }
+        },
+        watch: {
+            password() {
+                this.has_minimum_length = this.password.length >= 8;
+                this.has_number = /\d/.test(this.password);
+                this.has_lowerCase = /[a-z]/.test(this.password);
+                this.has_upperCase = /[A-Z]/.test(this.password);
+                this.has_special = /[!@#\$%\^\&*\)\(+=._-]/.test(this.password);
+            }
+        }
+    });
+
+    // Create a new Vue instance
+    var app = new Vue({
+        el: '#app'
+    });
+</script>
+
+</body>
+</html>
